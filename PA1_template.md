@@ -7,22 +7,30 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r, echo=TRUE}
+
+```r
 unzip("activity.zip", junkpaths = TRUE)
 activityData <- read.csv("activity.csv")
 
 activityData$date <- as.Date(activityData$date)
 
 head(activityData)
+```
 
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
 ```
 
 
 
 ## What is mean total number of steps taken per day?
-```{r}
 
-```
 
 
 
