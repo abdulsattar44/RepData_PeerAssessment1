@@ -82,11 +82,11 @@ medianSteps
 ## What is the average daily activity pattern?
 
 ```r
-averageDailyActivity <- activityData %>%
+avgDailyActivity <- activityData %>%
     group_by(interval) %>%
     summarize(average_steps = mean(steps, na.rm = TRUE))
 
-with(averageDailyActivity, plot(x = interval, y = average_steps, type = "l",
+with(avgDailyActivity, plot(x = interval, y = average_steps, type = "l",
                                 xlab = "5 min Intervals in a day",
                                 ylab = "Average Number of Steps", 
                                 main = "The Average Daily Activity Pattern"))
@@ -95,7 +95,15 @@ with(averageDailyActivity, plot(x = interval, y = average_steps, type = "l",
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 
+```r
+# 5-minute interval which contains maximum average number of steps
+maxInterval = avgDailyActivity$interval[which.max(avgDailyActivity$average_steps)]
+maxInterval
+```
 
+```
+## [1] 835
+```
 
 ## Imputing missing values
 
