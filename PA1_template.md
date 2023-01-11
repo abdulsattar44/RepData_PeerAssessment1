@@ -20,6 +20,10 @@ library(tidyverse)
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
 
+```r
+library(lattice)
+```
+
 
 ## Loading and preprocessing the data
 
@@ -108,5 +112,86 @@ maxInterval
 ## Imputing missing values
 
 
+```r
+# Calculate the missing values in the dataset
+sum(is.na(activityData))
+```
+
+```
+## [1] 2304
+```
+
+
+```r
+activityData_new <- merge(avgDailyActivity, activityData, by = "interval")
+naSteps <- is.na(activityData_new$steps)
+activityData_new$steps[naSteps] <- activityData_new$average_steps[naSteps]
+activityData_new <- activityData_new[,-(2)]
+```
+
+
+```r
+totalStepsNew <- activityData_new %>%
+    group_by(date) %>%
+    summarise(total_steps = sum(steps))
+# Histogram of the total number of steps taken each day
+with(totalStepsNew, hist(total_steps))
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
+
+
+```r
+mean_totalStepsNew <- mean(totalStepsNew$total_steps)
+median_totalStepsNew <- median(totalStepsNew$total_steps)
+
+mean_totalStepsNew
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+median_totalStepsNew
+```
+
+```
+## [1] 10766.19
+```
+
+
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+
+```r
+# Creating a new factor variable with two levels - weekday and weekend
+activityData_new$day <- "weekday"
+activityData_new$day[weekdays(as.Date(activityData_new$date), abb=TRUE) %in% c("Sat","Sun")] <- "weekend"
+
+activityData_new$day <- as.factor(activityData_new$day)
+```
+
+
+
+```r
+# Make a time series panel plot of the 5-minute interval and the average number of steps taken on weekday and weekend
+avgDailyActivity_new <- aggregate(steps ~ interval + day, data = activityData_new, FUN="mean")
+```
+
+
+
+```r
+xyplot(steps ~ interval | day, data = avgDailyActivity_new,
+       type = "l", layout = c(1,2),
+       main = "Average  5-min. activity intervals: Weekdays vs. Weekends",
+       xlab = "5-min Interval",
+       ylab = "Average Steps")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
